@@ -1,0 +1,98 @@
+
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <title>Leak Countdown</title>
+  <style>
+    body {
+      background-color: #121212;
+      color: #00ff88;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      overflow: hidden;
+      margin: 0;
+      padding: 0;
+    }
+
+    h1 {
+      font-size: 50px;
+      text-align: center;
+      margin-top: 50px;
+    }
+
+    #countdown {
+      font-size: 120px;
+      font-weight: bold;
+      text-shadow: 0 0 20px #00ff88;
+      text-align: center;
+      margin-top: 40px;
+    }
+
+    .clover {
+      position: absolute;
+      font-size: 30px;
+      animation: float 20s linear infinite;
+      pointer-events: none;
+    }
+
+    @keyframes float {
+      0% {
+        transform: translateY(100vh) translateX(0);
+        opacity: 1;
+      }
+      100% {
+        transform: translateY(-100vh) translateX(100px);
+        opacity: 0;
+      }
+    }
+  </style>
+</head>
+<body>
+  <h1>Đếm ngược đến giờ leak</h1>
+  <div id="countdown">Đang tải...</div>
+
+  <!-- Âm thanh đếm ngược -->
+  <audio id="tickSound" autoplay loop>
+    <source src="https://cdn.pixabay.com/audio/2022/03/15/audio_31fb84b209.mp3" type="audio/mpeg">
+    Trình duyệt của bạn không hỗ trợ âm thanh.
+  </audio>
+
+  <script>
+    const targetDate = new Date("2025-06-01T00:00:00").getTime();
+    const countdown = document.getElementById("countdown");
+
+    const interval = setInterval(() => {
+      const now = new Date().getTime();
+      const distance = targetDate - now;
+
+      if (distance < 0) {
+        clearInterval(interval);
+        countdown.innerHTML = "LEAKED!";
+        return;
+      }
+
+      const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+      const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+      const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+      const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+      countdown.innerHTML = `${days}d ${hours}h ${minutes}m ${seconds}s`;
+    }, 1000);
+
+    // Tạo hiệu ứng ☘️
+    function createClover() {
+      const clover = document.createElement("div");
+      clover.classList.add("clover");
+      clover.textContent = "☘️";
+      clover.style.left = Math.random() * window.innerWidth + "px";
+      clover.style.top = Math.random() * window.innerHeight + "px";
+      clover.style.animationDuration = (10 + Math.random() * 10) + "s";
+      clover.style.fontSize = (20 + Math.random() * 30) + "px";
+      document.body.appendChild(clover);
+      setTimeout(() => clover.remove(), 20000);
+    }
+
+    setInterval(createClover, 300);
+  </script>
+</body>
+</html>
